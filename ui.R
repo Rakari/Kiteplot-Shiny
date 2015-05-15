@@ -16,7 +16,7 @@ shinyUI(fluidPage(
                textInput("title","Choose Title for Plot"),
                textInput("interval", "Height Interval of Measurements"),
                radioButtons("method","Method of Research",c("Proportions"="prop","Individuals"="individ", "Biomass" = "biomass")),
-               # Set suface of measurement if research method is Biomass
+               # Set surface of measurement if research method is Biomass
                conditionalPanel(
                     condition = "input.method == 'biomass'",
                     textInput("unit", "Size of Surface in m^2")
