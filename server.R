@@ -54,7 +54,7 @@ shinyServer(function(input, output) {
           cex=0.7
           
           legend = ""
-          
+          #legend customized by input$method from user interface
           if(input$method == "prop"){
                legend = "100%"
           }
@@ -95,9 +95,9 @@ shinyServer(function(input, output) {
      })
      
      output$downloadPlot <- downloadHandler(
-          filename=paste(paste(sample(c(0:9, letters, LETTERS), 10, replace=TRUE), collapse = ""), "pdf", sep="."), 
+          filename=paste("Kiteplot-",format(Sys.Date(), "%m.%d.%y"), ".pdf", sep=""), 
           content=function(file=NULL) {
-               pdf(file, height=5,width=ncol(readData()))
+               pdf(file, height=5,width=ncol(read.xlsx(input$file1$datapath, sheetIndex=1)))
                if (is.null(input$file1))
                     return(NULL)
                     plotlist=algaeplot()
