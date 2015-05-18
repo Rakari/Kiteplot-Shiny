@@ -7,8 +7,8 @@
 
 library(shiny)
 
-shinyUI(fluidPage(
-     # Implement UI
+shinyUI(fluidPage( 
+    
      titlePanel("Kiteplot Generator"),
      sidebarLayout(
           sidebarPanel(
