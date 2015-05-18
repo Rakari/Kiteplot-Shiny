@@ -23,12 +23,12 @@ shinyServer(function(input, output) {
                interval = 0.25
           }
           
-          data = read.xlsx(inFile$datapath, sheetIndex=1)
           unit = as.numeric(input$unit)
           if (is.na(unit)) {
                unit = 1
           }
-          
+          #reads in xlsx or xls file chosen
+          data = read.xlsx(inFile$datapath, sheetIndex=1)
           end=ncol(data)
           
           #Extract duplicates of same elements in first column
