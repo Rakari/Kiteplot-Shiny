@@ -12,17 +12,6 @@ library(devtools)
 library(SirKR)
 
 shinyServer(function(input, output) {
-
-     readData = reactive({
-          inFile <- input$file1
-          
-          if (is.null(inFile))
-               return(NULL)
-          
-          data = read.xlsx(inFile$datapath, sheetIndex=1)
-          data
-     })
-     
      algaeplot<-reactive({ 
           inFile <- input$file1
           
@@ -34,12 +23,12 @@ shinyServer(function(input, output) {
                interval = 0.25
           }
           
+          data = read.xlsx(inFile$datapath, sheetIndex=1)
           unit = as.numeric(input$unit)
           if (is.na(unit)) {
                unit = 1
           }
           
-          data=readData()
           end=ncol(data)
           
           #Extract duplicates of same elements in first column
