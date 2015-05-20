@@ -12,10 +12,6 @@ library(devtools)
 library(SirKR)
 
 shinyServer(function(input, output) {
-     title <- reactive({
-          "hakk"
-     })
-     
      algaeplot<-reactive({ 
           inFile <- input$file1
           
@@ -99,7 +95,7 @@ shinyServer(function(input, output) {
      })
      
      output$downloadPlot <- downloadHandler(
-          filename=paste("Kiteplot-",format(as.POSIXct(Sys.Date()), "%b-%d-%Y"),".pdf",sep=""), 
+          filename=paste("Kiteplot-",format(Sys.Date(), "%m.%d.%y"), ".pdf", sep=""), 
           content=function(file=NULL) {
                pdf(file, height=5,width=ncol(read.xlsx(input$file1$datapath, sheetIndex=1)))
                if (is.null(input$file1))

@@ -19,7 +19,7 @@ shinyUI(fluidPage(
                # Set surface of measurement if research method is Biomass
                conditionalPanel(
                     condition = "input.method == 'biomass'",
-                    textInput("unit", HTML(paste("Size of Surface in m",tags$sup(2), sep="")))
+                    textInput("unit", "Size of Surface in m^2")
                ),
                downloadButton('downloadPlot', label = "Download Plot as PDF")
           ),
