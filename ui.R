@@ -21,6 +21,7 @@ shinyUI(fluidPage(
                     condition = "input.method == 'biomass'",
                     textInput("unit", HTML(paste("Size of Surface in m", tags$sup(2), sep="")))
                ),
+               textInput("above_sea", "Height Above Sea Level"),
                downloadButton('downloadPlot', label = "Download Plot as PDF")
           ),
           
