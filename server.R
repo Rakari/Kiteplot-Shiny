@@ -99,6 +99,13 @@ shinyServer(function(input, output) {
           legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
           with(plotlist,lines(legendline,c(ylim-0.375,ylim-0.375)))
           with(plotlist,text(x=tail(translation,1)-1,y=ylim,legend,cex=cex))
+     }, width=function(){
+          width = 0
+          if(!is.null(input$file1)) {
+               width = (ncol(read.xlsx(input$file1$datapath, sheetIndex=1)) * 70) + 100
+          }
+          
+          width
      })
      
      output$downloadPlot <- downloadHandler(
