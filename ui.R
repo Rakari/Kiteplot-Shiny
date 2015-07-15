@@ -12,21 +12,29 @@ shinyUI(fluidPage(
      titlePanel("Kiteplot Generator"),
      sidebarLayout(
           sidebarPanel(
-               fileInput('file1', 'Choose excel File'),
-               textInput("title","Choose Title for Plot"),
-               textInput("interval", "Height Interval of Measurements"),
-               radioButtons("method","Method of Research",c("Proportions"="prop","Individuals"="individ", "Biomass" = "biomass")),
+               fileInput('file1', 'Choose xlsx file'),
+               textInput("sheet",label="Sheet nr."),
+               textInput("title","Plot title"),
+               textInput("interval", "Height interval of measurements"),
+               textInput("above_sea", "Height above lowest astronomical tide"),
+               radioButtons("method","Method of research",c("Proportions"="prop","Individuals"="individ", "Biomass" = "biomass")),
                # Set surface of measurement if research method is Biomass
                conditionalPanel(
                     condition = "input.method == 'biomass'",
-                    textInput("unit", HTML(paste("Size of Surface in m", tags$sup(2), sep="")))
+                    textInput("unit", HTML(paste("Size of surface in m", tags$sup(2), sep="")))
                ),
-               textInput("above_sea", "Height Above Sea Level"),
+               
+               actionButton('go',label="Plot Kiteplot"),
+               br(),
+               br(),
+               br(),
                downloadButton('downloadPlot', label = "Download Plot as PDF")
           ),
           
           mainPanel(
                plotOutput('algaeplot')
+               #plotOutput('algaeplot',hover = hoverOpts(id = "plot_hover"))
+               #verbatimTextOutput("hover_info")
           )
      )
 ))

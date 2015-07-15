@@ -12,7 +12,7 @@ library(devtools)
 library(SirKR)
 
 shinyServer(function(input, output) {
-     algaeplot<-reactive({ 
+     algaeplot<-eventReactive(input$go,{ 
           inFile <- input$file1
           
           if (is.null(inFile))
@@ -32,31 +32,36 @@ shinyServer(function(input, output) {
           if(is.na(above_sea)) {
                above_sea = 0
           }
-          
+          sheetnr=as.numeric(input$sheet)
+          if(is.na(sheetnr)) {
+               sheetnr= 1
+          }
           #reads in xlsx or xls file chosen
-          data = read.xlsx(inFile$datapath, sheetIndex=1)
-          end=ncol(data)
+          realdata = read.xlsx(inFile$datapath, sheetIndex=sheetnr)
+          
+          if(is.null(realdata)) return(NULL)
+          
+          end=ncol(realdata)
           
           #Extract duplicates of same elements in first column
-          height=unique(data[,1])  
-          data=ddply(data,names(data)[1],colwise(meanNA))
-          data=clean(data)
+          #height=seq(0,end*interval,interval)
+          #height=unique(realdata[,1])  
+          #realdata=ddply(realdata,names(realdata)[1],colwise(meanNA))
+          data=clean(realdata)
           height=data[,1]
-          print(height)
           maxdata=max(data[,2:end],na.rm=T)
           
           if(input$method == "prop"){
                data=cbind(height,data[,2:end]/100)
           } else {
                data=cbind(height,data[,2:end]/maxdata)
-               
           }
           
-          translation=seq(1,1+3*(end-2),3)
+          translation=seq(1,1+3*(end-2),by=3)
           graph=t(t(data[,2:end])+translation)
           graphmirror=t(translation-t(data[,2:end]))
           graphdata=cbind(graph,graphmirror)
-          ylim=(interval/2*max(height)) +above_sea+1
+          ylim=(interval/2)*max(height)+1+above_sea
           xlim=tail(translation,1)+2
           cex=0.7
           
@@ -76,7 +81,7 @@ shinyServer(function(input, output) {
                     legend = bquote(.(paste(maxdata," g/",unit, "m", sep=""))^2)
                }
           }
-          
+               
           return(list("graphdata"=graphdata,
                "interval"=interval,
                "cex"=cex,
@@ -87,19 +92,23 @@ shinyServer(function(input, output) {
                "height"=height,
                "end"=end,
                "data"=data,
-               "above_sea"=above_sea))
+               "above_sea"=above_sea,
+               "realdata"=realdata))
      })   
      
      output$algaeplot <- renderPlot({
-          if (is.null(input$file1))
+          if (is.null(algaeplot()))
                return(NULL)
           
           plotlist=algaeplot()
-          with(plotlist, matplot(graphdata,(interval/2*height) + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(above_sea,ylim),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex,main = input$title))
+          with(plotlist, matplot(graphdata,(interval/2)*height + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),floor(ylim)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex))
+          #at=seq(floor(plotlist$above_sea),round(2*plotlist$ylim)/2,0.5)
+          #axis(side=2,at=at)
+          with(plotlist,mtext(input$title, side=3, adj=0.4, line=1.2, cex=1, font=2))
           with(plotlist,mtext(names(data[2:end]),side=1,at=translation,cex=cex))
           legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
-          with(plotlist,lines(legendline,c(ylim-0.375,ylim-0.375)))
-          with(plotlist,text(x=tail(translation,1)-1,y=ylim,legend,cex=cex))
+          with(plotlist,lines(legendline,c(ylim,ylim)))
+          with(plotlist,mtext(legend,side=3,at=tail(translation,1)-1,cex=cex))
      })
      
      output$downloadPlot <- downloadHandler(
@@ -108,17 +117,53 @@ shinyServer(function(input, output) {
           },
           content=function(file=NULL) {
                pdf(file, height=5,width=ncol(read.xlsx(input$file1$datapath, sheetIndex=1)))
-               if (is.null(input$file1))
+               if (is.null(algaeplot()))
                     return(NULL)
                     plotlist=algaeplot()
-                    
-                    with(plotlist, matplot(graphdata,interval/2*height,type="l",col=rep("black",ncol(graphdata)), ylim=c(above_sea,ylim),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex,main = input$title))
+                    with(plotlist, matplot(graphdata,(interval/2)*height + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),floor(ylim)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",
+                                           ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex))
+                    with(plotlist,mtext(input$title, side=3, adj=0.4, line=1.2, cex=1, font=2))
                     with(plotlist,mtext(names(data[2:end]),side=1,at=translation,cex=cex))
                     legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
-                    with(plotlist,lines(legendline,c(ylim-0.375,ylim-0.375)))
-                    with(plotlist,text(x=tail(translation,1)-1,y=ylim,legend,cex=cex))
+                    with(plotlist,lines(legendline,c(ylim,ylim)))
+                    with(plotlist,mtext(legend,side=3,at=tail(translation,1)-1,cex=cex))
                dev.off()
           }
      )
+#      output$hover_info <- renderPrint({
+#           if(!is.null(input$file1)){
+#                if(!is.null(input$plot_hover)){
+#                     hover=input$plot_hover
+#                     data=algaeplot()$realdata
+#                     end=ncol(data)
+#                     maxdata=max(data[,2:end],na.rm=T)
+#                     comparedata=cbind(data[,2:end],data[,2:end])
+#                     height=data[,1]*algaeplot()$interval
+#                     
+#                     if(input$method == "prop"){
+#                          data=cbind(height,data[,2:end]/100)
+#                     } else {
+#                          data=cbind(height,data[,2:end]/maxdata)
+#                          
+#                     }
+#                     translation=seq(1,1+3*(end-2),3)
+#                     graph=t(t(data[,2:end])+translation)
+#                     graphmirror=t(translation-t(data[,2:end]))
+#                     graphdata=cbind(graph,graphmirror)
+#                     disthover=sqrt((hover$x-graphdata)^2+(hover$y-height)^2)
+#                     if(min(disthover,na.rm=T)<1){
+#                     rowvalue=which.min(disthover)
+#                     colvalue=which.min(disthover[rowvalue,])
+#                     info=cbind(colnames(graphdata)[colvalue],paste(height[rowvalue]*0.25,"m",sep=" "),paste(comparedata[rowvalue,colvalue],"%",sep=""))
+#                     colnames(info)=c("Species","Height","Coverage")
+#                     }
+#                     else{return(NULL)
+#                          }
+#                }
+#           }
+#           
+#           
+#           
+#      })
 
 })
