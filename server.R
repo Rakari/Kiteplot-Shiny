@@ -101,7 +101,6 @@ shinyServer(function(input, output) {
                return(NULL)
           
           plotlist=algaeplot()
-<<<<<<< HEAD
           with(plotlist, matplot(graphdata,(interval/2)*height + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),floor(ylim)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex))
           #at=seq(floor(plotlist$above_sea),round(2*plotlist$ylim)/2,0.5)
           #axis(side=2,at=at)
@@ -110,20 +109,7 @@ shinyServer(function(input, output) {
           legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
           with(plotlist,lines(legendline,c(ylim,ylim)))
           with(plotlist,mtext(legend,side=3,at=tail(translation,1)-1,cex=cex))
-=======
-          with(plotlist, matplot(graphdata,(interval/2*height) + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),ylim),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height Above Lowest Astronomical Tide (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex,main = input$title))
-          with(plotlist,mtext(names(data[2:end]),side=1,at=translation,cex=cex))
-          legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
-          with(plotlist,lines(legendline,c(ylim-0.375,ylim-0.375)))
-          with(plotlist,text(x=tail(translation,1)-1,y=ylim,legend,cex=cex))
-     }, width=function(){
-          width = 0
-          if(!is.null(input$file1)) {
-               width = (ncol(read.xlsx(input$file1$datapath, sheetIndex=1)) * 70) + 100
-          }
           
-          width
->>>>>>> 0bcaca7ebd932d467b68a416b7d43563ff3a4a38
      })
      
      output$downloadPlot <- downloadHandler(
@@ -134,7 +120,6 @@ shinyServer(function(input, output) {
                pdf(file)
                if (is.null(algaeplot()))
                     return(NULL)
-<<<<<<< HEAD
                plotlist=algaeplot()
                with(plotlist, matplot(graphdata,(interval/2)*height + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),floor(ylim)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex))
                #at=seq(floor(plotlist$above_sea),round(2*plotlist$ylim)/2,0.5)
@@ -144,15 +129,6 @@ shinyServer(function(input, output) {
                legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
                with(plotlist,lines(legendline,c(ylim,ylim)))
                with(plotlist,mtext(legend,side=3,at=tail(translation,1)-1,cex=cex))
-=======
-                    plotlist=algaeplot()
-                    
-                    with(plotlist, matplot(graphdata,interval/2*height,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),ylim),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height Above Lowest Astronomical Tide (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex,main = input$title))
-                    with(plotlist,mtext(names(data[2:end]),side=1,at=translation,cex=cex))
-                    legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
-                    with(plotlist,lines(legendline,c(ylim-0.375,ylim-0.375)))
-                    with(plotlist,text(x=tail(translation,1)-1,y=ylim,legend,cex=cex))
->>>>>>> 0bcaca7ebd932d467b68a416b7d43563ff3a4a38
                dev.off()
           }
      )

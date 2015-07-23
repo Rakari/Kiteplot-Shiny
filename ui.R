@@ -23,15 +23,11 @@ shinyUI(fluidPage(
                     condition = "input.method == 'biomass'",
                     textInput("unit", HTML(paste("Size of surface in m", tags$sup(2), sep="")))
                ),
-<<<<<<< HEAD
                
                actionButton('go',label="Plot Kiteplot"),
                br(),
                br(),
                br(),
-=======
-               textInput("above_sea", "Height Above Lowest Astronomical Tide"),
->>>>>>> 0bcaca7ebd932d467b68a416b7d43563ff3a4a38
                downloadButton('downloadPlot', label = "Download Plot as PDF")
           ),
           
