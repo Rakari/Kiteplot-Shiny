@@ -116,17 +116,18 @@ shinyServer(function(input, output) {
                 paste(gsub(" ","-",input$title),"-",format(Sys.Date(), "%b-%d-%Y"), ".pdf", sep="")
           },
           content=function(file=NULL) {
-               pdf(file, height=5,width=ncol(read.xlsx(input$file1$datapath, sheetIndex=1)))
+               pdf(file)
                if (is.null(algaeplot()))
                     return(NULL)
-                    plotlist=algaeplot()
-                    with(plotlist, matplot(graphdata,(interval/2)*height + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),floor(ylim)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",
-                                           ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex))
-                    with(plotlist,mtext(input$title, side=3, adj=0.4, line=1.2, cex=1, font=2))
-                    with(plotlist,mtext(names(data[2:end]),side=1,at=translation,cex=cex))
-                    legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
-                    with(plotlist,lines(legendline,c(ylim,ylim)))
-                    with(plotlist,mtext(legend,side=3,at=tail(translation,1)-1,cex=cex))
+               plotlist=algaeplot()
+               with(plotlist, matplot(graphdata,(interval/2)*height + above_sea,type="l",col=rep("black",ncol(graphdata)), ylim=c(floor(above_sea),floor(ylim)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",ylab="Height (m)",xaxt="n",bty="n",cex.axis=cex,cex.lab=cex))
+               #at=seq(floor(plotlist$above_sea),round(2*plotlist$ylim)/2,0.5)
+               #axis(side=2,at=at)
+               with(plotlist,mtext(input$title, side=3, adj=0.4, line=1.2, cex=1, font=2))
+               with(plotlist,mtext(names(data[2:end]),side=1,at=translation,cex=cex))
+               legendline=with(plotlist, c(tail(translation,1)-2,tail(translation,1)))
+               with(plotlist,lines(legendline,c(ylim,ylim)))
+               with(plotlist,mtext(legend,side=3,at=tail(translation,1)-1,cex=cex))
                dev.off()
           }
      )

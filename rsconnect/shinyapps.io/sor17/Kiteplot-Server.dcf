@@ -1,8 +1,8 @@
 name: Kiteplot-Server
 account: sor17
 server: shinyapps.io
-bundleId: 219975
+bundleId: 219978
 url: https://sor17.shinyapps.io/Kiteplot-Server
-when: 1436918773.07027
+when: 1436919808.97542
 asMultiple: FALSE
 asStatic: FALSE
