@@ -11,6 +11,7 @@ library(plyr)
 library(devtools)
 library(SirKR)
 
+#Setting up the Shiny Server
 shinyServer(function(input, output) {
      algaeplot<-eventReactive(input$go,{ 
           inFile <- input$file1
