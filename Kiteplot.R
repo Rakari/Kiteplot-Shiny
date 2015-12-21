@@ -95,7 +95,7 @@ Kiteplot <- function(data,interval=0.25,unit=1,above_sea = 0,sheetnr= 1,title=""
 #         axis(side=2,at=c(setdiff(seq(yAxisValues[1],yAxisValues[2],length.out=yAxisValues[3]+1),yAxisValues[2]),ylim),
 #              labels=c(setdiff(seq(yAxisValues[1],yAxisValues[2],length.out=yAxisValues[3]+1),yAxisValues[2]),ylim),cex.axis=cex,cex.lab=cex)
          axis(side=2,at=sequence,
-             labels=format(sequence,nsmall=digits),cex.axis=0.4,las=1,cex.lab=cex)
+             labels=format(sequence,nsmall=digits),cex.axis=cex,las=1,cex.lab=cex)
     }else{
         sequence=seq(ylim,yAxisValues[1],by=-interval)
         axis(side=2,at=sequence,

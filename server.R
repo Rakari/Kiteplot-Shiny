@@ -1,13 +1,10 @@
 library(shiny)
 library(xlsx)
 library(SirKR)
-<<<<<<< HEAD
 source("Kiteplot.R")
 source("Kiteplot1.R")
-=======
 
 #Setting up the Shiny Server
->>>>>>> dba8652b26b95f3aeabd58c5c89d262826eb8a2d
 shinyServer(function(input, output) {
      algaeplot<-eventReactive(input$go,{ 
           inFile <- input$file1
