@@ -1,40 +1,43 @@
-
-# This is the user-interface definition of a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
-
 library(shiny)
 
-shinyUI(fluidPage( 
+    shinyUI(fluidPage( 
     
      titlePanel("Kiteplot Generator"),
      sidebarLayout(
           sidebarPanel(
-               fileInput('file1', 'Choose xlsx file'),
-               textInput("sheet",label="Sheet nr."),
-               textInput("title","Plot title"),
-               textInput("interval", "Height interval of measurements"),
-               textInput("above_sea", "Height above lowest astronomical tide"),
-               radioButtons("method","Method of research",c("Proportions"="prop","Individuals"="individ", "Biomass" = "biomass")),
+                fileInput('file1', 'Choose xlsx file'),
+                textInput("sheet",label="Sheet nr."),
+                textInput("title","Plot title"),
+                textInput("ylab","y-label"),
+                radioButtons("TypeOfYAxis","Type of y-axis",c("Length from highest station"="LengthFromHighest","Height above sea level"="Height")),
+                conditionalPanel(
+                    condition = "input.TypeOfYAxis == 'Height'",
+                    textInput("above_sea", "Initial height above lowest astronomical tide")
+                 ),
+                textInput("interval", "Interval of measurements"),
+                radioButtons("method","Method of research",c("Proportions"="prop","Individuals"="individ", "Biomass" = "biomass")),
                # Set surface of measurement if research method is Biomass
                conditionalPanel(
+                    condition = "input.method == 'individ'",
+                    textInput("legendScale", "Number of individuals in legend")
+               ),
+                conditionalPanel(
                     condition = "input.method == 'biomass'",
                     textInput("unit", HTML(paste("Size of surface in m", tags$sup(2), sep="")))
-               ),
-               
-               actionButton('go',label="Plot Kiteplot"),
-               br(),
-               br(),
-               br(),
-               downloadButton('downloadPlot', label = "Download Plot as PDF")
-          ),
+                ),
+                
+                actionButton('go',label="Plot Kiteplot"),
+                br(),
+                br(),
+                br(),
+                downloadButton('downloadPlot', label = "Download Plot as PDF")
+        ),
           
           mainPanel(
-               plotOutput('algaeplot')
-               #plotOutput('algaeplot',hover = hoverOpts(id = "plot_hover"))
+               plotOutput('algaeplot'),
+               textOutput('debug')
+               #plotOutput('algaeplot',hover = hoverOpts(id = "plot_hover")),
                #verbatimTextOutput("hover_info")
           )
      )
-))
+    ))
