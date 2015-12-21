@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
                    above_sea = input$above_sea,sheetnr= input$sheet,title=input$title,
                    method=input$method,ylab=input$ylab,TypeOfYAxis=input$TypeOfYAxis,legendScale = input$legendScale)
           }
-          kitedata
+          return(kitedata)
      })   
      
      output$algaeplot <- renderPlot({
