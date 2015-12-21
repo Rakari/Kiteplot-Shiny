@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
                    above_sea = input$above_sea,sheetnr= input$sheet,title=input$title,
                    method=input$method,ylab=input$ylab,TypeOfYAxis=input$TypeOfYAxis,legendScale = input$legendScale)
           }
-
+          kitedata
      })   
      
      output$algaeplot <- renderPlot({
@@ -48,40 +48,40 @@ shinyServer(function(input, output) {
                dev.off()
           }
      )
-#      output$hover_info <- renderPrint({
-#           if(!is.null(input$file1)){
-#                if(!is.null(input$plot_hover)){
-#                     hover=input$plot_hover
-#                     data=algaeplot()$realdata
-#                     end=ncol(data)
-#                     maxdata=max(data[,2:end],na.rm=T)
-#                     comparedata=cbind(data[,2:end],data[,2:end])
-#                     height=data[,1]*algaeplot()$interval
-#                     
-#                     if(input$method == "prop"){
-#                          data=cbind(height,data[,2:end]/100)
-#                     } else {
-#                          data=cbind(height,data[,2:end]/maxdata)
-#                          
-#                     }
-#                     translation=seq(1,1+3*(end-2),3)
-#                     graph=t(t(data[,2:end])+translation)
-#                     graphmirror=t(translation-t(data[,2:end]))
-#                     graphdata=cbind(graph,graphmirror)
-#                     disthover=sqrt((hover$x-graphdata)^2+(hover$y-height)^2)
-#                     if(min(disthover,na.rm=T)<1){
-#                         rowvalue=which.min(disthover)
-#                         colvalue=which.min(disthover[rowvalue,])
-#                         info=cbind(colnames(graphdata)[colvalue],paste(height[rowvalue]*0.25,"m",sep=" "),paste(comparedata[rowvalue,colvalue],"%",sep=""))
-#                         colnames(info)=c("Species","Height","Coverage")
-#                     }
-#                     else{return(NULL)
-#                          }
-#                }
-#           }
-#           
-#           
-#           
-#      })
-#
+     output$hover_info <- renderPrint({
+          if(!is.null(input$file1)){
+               if(!is.null(input$plot_hover)){
+                    hover=input$plot_hover
+                    data=algaeplot()
+                    end=ncol(data)
+                    maxdata=max(data[,2:end],na.rm=T)
+                    comparedata=cbind(data[,2:end],data[,2:end])
+                    height=data[,1]*algaeplot()$interval
+                    
+                    if(input$method == "prop"){
+                         data=cbind(height,data[,2:end]/100)
+                    } else {
+                         data=cbind(height,data[,2:end]/maxdata)
+                         
+                    }
+                    translation=seq(1,1+3*(end-2),3)
+                    graph=t(t(data[,2:end])+translation)
+                    graphmirror=t(translation-t(data[,2:end]))
+                    graphdata=cbind(graph,graphmirror)
+                    disthover=sqrt((hover$x-graphdata)^2+(hover$y-height)^2)
+                    if(min(disthover,na.rm=T)<1){
+                        rowvalue=which.min(disthover)
+                        colvalue=which.min(disthover[rowvalue,])
+                        info=cbind(colnames(graphdata)[colvalue],paste(height[rowvalue]*0.25,"m",sep=" "),paste(comparedata[rowvalue,colvalue],"%",sep=""))
+                        colnames(info)=c("Species","Height","Coverage")
+                    }
+                    else{return(NULL)
+                         }
+               }
+          }
+          
+          
+          
+     })
+
 })
