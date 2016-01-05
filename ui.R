@@ -34,9 +34,8 @@ library(shiny)
         ),
           
           mainPanel(
-               #plotOutput('algaeplot'),
-               textOutput('debug'),
                plotOutput('algaeplot',hover = hoverOpts(id = "plot_hover")),
+               #tableOutput('debug'),
                verbatimTextOutput("hover_info")
           )
      )

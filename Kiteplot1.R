@@ -21,15 +21,16 @@ Kiteplot1 <- function(data,interval=0.25,unit=1,above_sea = 0,sheetnr= 1,title="
     }
     #reads in xlsx or xls file chosen
     realdata = read.xlsx(data, sheetIndex=sheetnr)
-    
-    # if(is.null(realdata)) return(NULL)
+    if(is.null(realdata)) return(NULL)
     
     end=ncol(realdata)
     
     data=clean(realdata)
     height=(data[,1]-2)*interval/2 + above_sea
     maxdata=max(data[,2:end],na.rm=T)
-    names=names(data[2:end])
+    names(data) = gsub(x = names(data),
+                       pattern = "\\.",
+                       replacement = " ")
     if(method == "prop"){
         data=cbind(height,data[,2:end]/100)
     } else {

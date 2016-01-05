@@ -21,8 +21,7 @@ Kiteplot <- function(data,interval=0.25,unit=1,above_sea = 0,sheetnr= 1,title=""
     }
     #reads in xlsx or xls file chosen
     realdata = read.xlsx(data, sheetIndex=sheetnr)
-    
-    # if(is.null(realdata)) return(NULL)
+    if(is.null(realdata)) return(NULL)
     
     end=ncol(realdata)
     
@@ -67,13 +66,15 @@ Kiteplot <- function(data,interval=0.25,unit=1,above_sea = 0,sheetnr= 1,title=""
         }
     }
     
+    legendlim = ylim
+    
     if(TypeOfYAxis!="Height"){
         initial=height[1]
         if(is.na(initial)){
             initial=0
         }
         height=height+ylim+2*interval/2-2*(height-height[1])
-        #graphdata=graphdata[nrow(graphdata):1,]
+        legendlim = ylim + interval
     }
     matplot(graphdata,height,type="l",
                            col=rep("black",ncol(graphdata)),xlim=c(0,xlim),lty=rep(1,ncol(graphdata)),xlab="",
@@ -81,7 +82,7 @@ Kiteplot <- function(data,interval=0.25,unit=1,above_sea = 0,sheetnr= 1,title=""
     mtext(title, side=3, adj=0.4, line=1.2, cex=1, font=2)
     mtext(names(data[2:end]),side=1,at=translation,cex=cex)
     legendline=c(tail(translation,1)-(1+legendScale/maxdata),tail(translation,1)-1+legendScale/maxdata)
-    lines(legendline,c(ylim,ylim))
+    lines(legendline,c(legendlim,legendlim))
     mtext(legend,side=3,at=tail(translation,1)-1,cex=cex)
     #axis(2, at = c(ylim),label=ylim)
     yAxisValues=par()$yaxp
